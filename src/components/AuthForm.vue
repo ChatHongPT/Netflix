@@ -36,7 +36,7 @@ const schema = computed(() => {
   return yup.object(baseSchema)
 })
 
-const { handleSubmit, errors } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: schema
 })
 

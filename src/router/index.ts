@@ -10,21 +10,14 @@ const router = createRouter({
   routes: [
     {
       path: '/signin',
-      redirect: (to) => {
-        const isAuthenticated = localStorage.getItem('user')
-        return isAuthenticated ? { name: 'home' } : { name: 'signin' }
-      }
+      name: 'signin',
+      component: SignIn
     },
     {
       path: '/',
       name: 'home',
       component: Home,
       meta: { requiresAuth: true }
-    },
-    {
-      path: '/signin',
-      name: 'signin',
-      component: SignIn
     },
     {
       path: '/trending',
@@ -50,8 +43,12 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const isAuthenticated = localStorage.getItem('user')
   
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.path === '/' && !isAuthenticated) {
     next('/signin')
+  } else if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/signin')
+  } else if (to.path === '/signin' && isAuthenticated) {
+    next('/')
   } else {
     next()
   }

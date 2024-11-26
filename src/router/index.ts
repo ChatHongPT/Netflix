@@ -25,7 +25,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/my-list',
+      path: '/wishlist',
       name: 'myList',
       component: MyList,
       meta: { requiresAuth: true },

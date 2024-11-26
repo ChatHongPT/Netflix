@@ -9,22 +9,19 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/signin',
-      redirect: () => {
-        const isAuthenticated = localStorage.getItem('user')
-        return isAuthenticated ? { name: 'home' } : { name: 'signin' }
-      }
-    },
-    {
       path: '/',
-      name: 'home',
-      component: Home,
-      meta: { requiresAuth: true }
+      redirect: '/signin' // 기본 경로로 접근 시 /signin으로 리다이렉트
     },
     {
       path: '/signin',
       name: 'signin',
       component: SignIn
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: Home,
+      meta: { requiresAuth: true }
     },
     {
       path: '/trending',

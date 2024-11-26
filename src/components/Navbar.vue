@@ -60,7 +60,7 @@ const handleLogout = () => {
             >찾아보기</RouterLink
           >
           <RouterLink
-            to="/my-list"
+            to="/wishlist"
             class="text-sm hover:text-gray-300 transition"
             >내가 찜한 콘텐츠</RouterLink
           >

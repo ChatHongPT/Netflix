@@ -6,7 +6,7 @@ import Browse from '../views/Browse.vue'
 import MyList from '../views/MyList.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/Netflix'), // base를 명시
   routes: [
     {
       path: '/signin',
@@ -43,15 +43,12 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const isAuthenticated = localStorage.getItem('user')
   
-  if (to.path === '/' && !isAuthenticated) {
+  if (to.meta.requiresAuth && !isAuthenticated) {
     next('/signin')
-  } else if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/signin')
-  } else if (to.path === '/signin' && isAuthenticated) {
-    next('/')
   } else {
     next()
   }
 })
 
 export default router
+

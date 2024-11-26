@@ -1,76 +1,108 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { getPopularMovies, getTopRatedMovies, getNowPlayingMovies, type Movie } from '../services/movieApi'
-import MovieRow from '../components/MovieRow.vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue';
+import {
+  getPopularMovies,
+  getTopRatedMovies,
+  getNowPlayingMovies,
+  type Movie,
+} from '../services/movieApi';
+import MovieRow from '../components/MovieRow.vue';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
 
-const featuredMovies = ref<Movie[]>([])
-const currentFeaturedIndex = ref(0)
-const popularMovies = ref<Movie[]>([])
-const topRatedMovies = ref<Movie[]>([])
-const nowPlayingMovies = ref<Movie[]>([])
-const loading = ref(true)
+const featuredMovies = ref<Movie[]>([]);
+const currentFeaturedIndex = ref(0);
+const popularMovies = ref<Movie[]>([]);
+const topRatedMovies = ref<Movie[]>([]);
+const nowPlayingMovies = ref<Movie[]>([]);
+const loading = ref(true);
+const rowsLoading = ref({
+  popular: true,
+  topRated: true,
+  nowPlaying: true,
+});
 
-const bannerInterval = ref<number>()
+const bannerInterval = ref<number>();
 
 const changeFeaturedMovie = () => {
   if (featuredMovies.value.length > 0) {
-    currentFeaturedIndex.value = (currentFeaturedIndex.value + 1) % featuredMovies.value.length
+    currentFeaturedIndex.value =
+      (currentFeaturedIndex.value + 1) % featuredMovies.value.length;
   }
-}
+};
 
 const startBannerRotation = () => {
-  bannerInterval.value = window.setInterval(changeFeaturedMovie, 5000)
-}
+  bannerInterval.value = window.setInterval(changeFeaturedMovie, 5000);
+};
 
 const stopBannerRotation = () => {
   if (bannerInterval.value) {
-    clearInterval(bannerInterval.value)
+    clearInterval(bannerInterval.value);
   }
-}
+};
 
 const fetchMovies = async () => {
   try {
     const [popularRes, topRatedRes, nowPlayingRes] = await Promise.all([
-      getPopularMovies(),
-      getTopRatedMovies(),
-      getNowPlayingMovies()
-    ])
-    
-    popularMovies.value = popularRes.data.results
-    topRatedMovies.value = topRatedRes.data.results
-    nowPlayingMovies.value = nowPlayingRes.data.results
-    
-    featuredMovies.value = popularRes.data.results
-      .filter(movie => movie.backdrop_path)
-      .slice(0, 5)
+      getPopularMovies().then(res => {
+        rowsLoading.value.popular = false;
+        return res;
+      }),
+      getTopRatedMovies().then(res => {
+        rowsLoading.value.topRated = false;
+        return res;
+      }),
+      getNowPlayingMovies().then(res => {
+        rowsLoading.value.nowPlaying = false;
+        return res;
+      }),
+    ]);
 
-    startBannerRotation()
+    popularMovies.value = popularRes.data.results;
+    topRatedMovies.value = topRatedRes.data.results;
+    nowPlayingMovies.value = nowPlayingRes.data.results;
+
+    featuredMovies.value = popularRes.data.results
+      .filter((movie) => movie.backdrop_path)
+      .slice(0, 5);
+
+    startBannerRotation();
   } catch (error) {
-    console.error('Failed to fetch movies:', error)
+    console.error('Failed to fetch movies:', error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  fetchMovies()
-})
+  fetchMovies();
+});
 
 onUnmounted(() => {
-  stopBannerRotation()
-})
+  stopBannerRotation();
+});
 
-const currentFeaturedMovie = computed(() => 
-  featuredMovies.value[currentFeaturedIndex.value]
-)
+const currentFeaturedMovie = computed(
+  () => featuredMovies.value[currentFeaturedIndex.value]
+);
 </script>
 
 <template>
   <div class="min-h-screen">
+    <!-- Loading State for Hero Section -->
+    <div
+      v-if="loading && !currentFeaturedMovie"
+      class="h-[85vh] w-full flex items-center justify-center bg-gray-900"
+    >
+      <LoadingSpinner size="lg" />
+    </div>
+
     <!-- Featured Movie Hero Section -->
-    <div v-if="currentFeaturedMovie" class="relative h-[85vh] w-full overflow-hidden">
+    <div
+      v-else-if="currentFeaturedMovie"
+      class="relative h-[85vh] w-full overflow-hidden"
+    >
       <transition name="fade" mode="out-in">
-        <img 
+        <img
           :key="currentFeaturedMovie.id"
           :src="`https://image.tmdb.org/t/p/original${currentFeaturedMovie.backdrop_path}`"
           :alt="currentFeaturedMovie.title"
@@ -79,8 +111,12 @@ const currentFeaturedMovie = computed(() =>
       </transition>
       <div class="absolute inset-0 netflix-gradient"></div>
       <div class="absolute bottom-[30%] left-0 p-12 space-y-4 max-w-2xl">
-        <h1 class="text-4xl font-bold text-shadow-lg">{{ currentFeaturedMovie.title }}</h1>
-        <p class="text-lg text-gray-200 line-clamp-3 text-shadow-md">{{ currentFeaturedMovie.overview }}</p>
+        <h1 class="text-4xl font-bold text-shadow-lg">
+          {{ currentFeaturedMovie.title }}
+        </h1>
+        <p class="text-lg text-gray-200 line-clamp-3 text-shadow-md">
+          {{ currentFeaturedMovie.overview }}
+        </p>
       </div>
       <!-- Banner Indicators -->
       <div class="absolute bottom-[20%] right-4 flex space-x-2">
@@ -89,30 +125,32 @@ const currentFeaturedMovie = computed(() =>
           :key="index"
           @click="currentFeaturedIndex = index"
           class="w-2 h-2 rounded-full transition-all duration-300"
-          :class="index === currentFeaturedIndex ? 'bg-white scale-125' : 'bg-gray-500 hover:bg-gray-400'"
+          :class="
+            index === currentFeaturedIndex
+              ? 'bg-white scale-125'
+              : 'bg-gray-500 hover:bg-gray-400'
+          "
         ></button>
       </div>
     </div>
 
     <!-- Movie Rows -->
     <div class="relative z-10 -mt-64 pb-16">
-      <MovieRow 
-        title="인기 콘텐츠" 
+      <MovieRow
+        title="인기 콘텐츠"
         :movies="popularMovies"
+        :loading="rowsLoading.popular"
       />
-      <MovieRow 
-        title="평단의 찬사를 받은 영화" 
+      <MovieRow
+        title="평단의 찬사를 받은 영화"
         :movies="topRatedMovies"
+        :loading="rowsLoading.topRated"
       />
-      <MovieRow 
-        title="현재 상영작" 
+      <MovieRow
+        title="현재 상영작"
         :movies="nowPlayingMovies"
+        :loading="rowsLoading.nowPlaying"
       />
-    </div>
-
-    <!-- Loading State -->
-    <div v-if="loading" class="flex items-center justify-center min-h-screen">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
     </div>
   </div>
 </template>

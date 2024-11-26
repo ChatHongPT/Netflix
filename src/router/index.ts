@@ -6,11 +6,11 @@ import Browse from '../views/Browse.vue'
 import MyList from '../views/MyList.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/Netflix'), // base를 명시
   routes: [
     {
       path: '/',
-      redirect: '/signin' // 기본 경로로 접근 시 /signin으로 리다이렉트
+      redirect: '/signin' // 처음 접속 시 /signin으로 리다이렉트
     },
     {
       path: '/signin',

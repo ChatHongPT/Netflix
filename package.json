@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.19",

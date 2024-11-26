@@ -3,5 +3,5 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/Netflix/', // GitHub Pages에서 서브 디렉토리를 사용할 경우
+  base: '/Netflix/', // 저장소 이름과 일치
 });

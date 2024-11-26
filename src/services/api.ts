@@ -10,7 +10,7 @@ export const api = axios.create({
   }
 })
 
-export const validateCredentials = async (email: string, password: string) => {
+export const validateCredentials = async (password: string) => {
   // Check if password matches TMDB API key
   return password === TMDB_API_KEY
 }

@@ -27,21 +27,25 @@ const schema = computed(() => {
       passwordConfirm: yup.string()
         .oneOf([yup.ref('password')], '비밀번호가 일치하지 않습니다')
         .required('비밀번호 확인은 필수입니다'),
-      terms: yup.boolean().oneOf([true], '약관에 동의해주세요')
+      terms: yup.boolean()
+        .oneOf([true], '서비스 이용을 위해 약관에 동의해주세요')
+        .required('약관 동의는 필수입니다')
     })
   }
   
   return yup.object(baseSchema)
 })
 
-const { handleSubmit, resetForm } = useForm({
+const { handleSubmit, errors } = useForm({
   validationSchema: schema
 })
 
 const { value: email, errorMessage: emailError } = useField('email')
 const { value: password, errorMessage: passwordError } = useField('password')
 const { value: passwordConfirm, errorMessage: passwordConfirmError } = useField('passwordConfirm')
-const { value: terms, errorMessage: termsError } = useField('terms')
+const { value: terms, errorMessage: termsError } = useField('terms', undefined, {
+  initialValue: false
+})
 const { value: rememberMe } = useField('rememberMe')
 
 const isLoading = ref(false)
@@ -55,8 +59,13 @@ onMounted(() => {
 
 const onSubmit = handleSubmit(async (values) => {
   try {
+    if (props.mode === 'signup' && !values.terms) {
+      toast.error('약관에 동의해주세요')
+      return
+    }
+
     isLoading.value = true
-    const isValid = await validateCredentials(values.email, values.password)
+    const isValid = await validateCredentials(values.password)
     
     if (isValid) {
       const userData = {
@@ -133,10 +142,12 @@ const onSubmit = handleSubmit(async (values) => {
         <div class="flex items-center transform transition-all duration-300">
           <input
             type="checkbox"
+            id="terms"
             v-model="terms"
             class="rounded bg-gray-700 border-gray-600 text-blue-600 transition-colors duration-200"
+            :class="{ 'border-red-500': termsError }"
           />
-          <label class="ml-2 text-sm text-gray-300">약관에 동의합니다</label>
+          <label for="terms" class="ml-2 text-sm text-gray-300">서비스 이용약관에 동의합니다 (필수)</label>
         </div>
         <p v-if="termsError" class="mt-1 text-sm text-red-500">{{ termsError }}</p>
       </template>
@@ -145,18 +156,20 @@ const onSubmit = handleSubmit(async (values) => {
         <div class="flex items-center transform transition-all duration-300">
           <input
             type="checkbox"
+            id="rememberMe"
             v-model="rememberMe"
             class="rounded bg-gray-700 border-gray-600 text-blue-600 transition-colors duration-200"
           />
-          <label class="ml-2 text-sm text-gray-300">로그인 정보 저장</label>
+          <label for="rememberMe" class="ml-2 text-sm text-gray-300">로그인 정보 저장</label>
         </div>
       </template>
     </div>
 
     <button
       type="submit"
-      :disabled="isLoading"
+      :disabled="isLoading || (mode === 'signup' && !terms)"
       class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all duration-200 hover:scale-[1.02]"
+      :class="{ 'opacity-50 cursor-not-allowed': mode === 'signup' && !terms }"
     >
       {{ isLoading ? '처리 중...' : (mode === 'signin' ? '로그인' : '회원가입') }}
     </button>

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import SignIn from '../views/SignIn.vue';
-import Browse from '../views/Browse.vue';
+import Browse from '../views/Search.vue';
 import MyList from '../views/MyList.vue';
 import Trending from '../views/Trending.vue';
 
@@ -20,13 +20,13 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/trending',
+      path: '/popular',
       name: 'trending',
       component: Trending,
       meta: { requiresAuth: true },
     },
     {
-      path: '/browse',
+      path: '/search',
       name: 'browse',
       component: Browse,
       meta: { requiresAuth: true },

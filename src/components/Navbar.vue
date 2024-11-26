@@ -50,12 +50,12 @@ const handleLogout = () => {
         >
         <div v-if="isAuthenticated" class="flex space-x-6">
           <RouterLink
-            to="/trending"
+            to="/popular"
             class="text-sm hover:text-gray-300 transition"
             >대세 콘텐츠</RouterLink
           >
           <RouterLink
-            to="/browse"
+            to="/search"
             class="text-sm hover:text-gray-300 transition"
             >찾아보기</RouterLink
           >

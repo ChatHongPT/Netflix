@@ -4,7 +4,7 @@ import type { Movie } from '../services/movieApi';
 import LoadingSpinner from './LoadingSpinner.vue';
 import { useFavorites } from '../composables/useFavorites';
 
-defineProps<{
+const props = defineProps<{
   title: string;
   movies: Movie[];
   loading?: boolean;
@@ -37,8 +37,8 @@ const { toggleFavorite, isFavorite } = useFavorites();
               loading="lazy"
             />
             <div
-              v-if="hoveredMovie === movie.id"
-              class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end"
+              v-show="hoveredMovie === movie.id"
+              class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 flex flex-col justify-end movie-card-content"
             >
               <div class="absolute top-4 right-4">
                 <button
@@ -62,16 +62,16 @@ const { toggleFavorite, isFavorite } = useFavorites();
                   </svg>
                 </button>
               </div>
-              <h3 class="font-bold text-sm mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                {{ movie.title }}
-              </h3>
-              <div class="flex items-center space-x-2 text-xs transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                <span class="text-green-500 font-semibold">
-                  {{ Math.round(movie.vote_average * 10) }}% 매칭
-                </span>
-                <span class="text-gray-300">
-                  {{ new Date(movie.release_date).getFullYear() }}
-                </span>
+              <div class="movie-info">
+                <h3 class="font-bold text-sm mb-2">{{ movie.title }}</h3>
+                <div class="flex items-center space-x-2 text-xs">
+                  <span class="text-green-500 font-semibold">
+                    {{ Math.round(movie.vote_average * 10) }}% 매칭
+                  </span>
+                  <span class="text-gray-300">
+                    {{ new Date(movie.release_date).getFullYear() }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -88,13 +88,5 @@ const { toggleFavorite, isFavorite } = useFavorites();
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
-
-.group {
-  perspective: 1000px;
-}
-
-.group:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 </style>

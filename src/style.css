@@ -7,43 +7,25 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: #141414;
   color: #ffffff;
   font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.netflix-gradient {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 1) 100%);
-}
+@layer components {
+  .netflix-gradient {
+    @apply bg-gradient-to-b from-transparent via-black/80 to-black;
+  }
 
-.movie-card {
-  @apply transition-all duration-300 ease-in-out transform-gpu;
-}
+  .movie-card {
+    @apply transition-all duration-300 ease-in-out transform-gpu;
+  }
 
-.movie-card-content {
-  @apply transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100;
-}
+  .movie-card-content {
+    @apply transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100;
+  }
 
-.movie-info {
-  @apply transition-all duration-300 ease-in-out transform translate-y-4 group-hover:translate-y-0;
-}
-
-* {
-  @apply transition-transform duration-300 ease-in-out;
-}
-
-/* Netflix-like scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  background-color: #000000;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #4a4a4a;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #717171;
+  .movie-info {
+    @apply transition-all duration-300 ease-in-out transform translate-y-4 group-hover:translate-y-0;
+  }
 }

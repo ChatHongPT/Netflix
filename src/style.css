@@ -10,14 +10,30 @@
 /* 모바일 기기에서 기본 폰트 크기 조정 */
 @media (max-width: 640px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
+  }
+  
+  h1 {
+    @apply text-xl;
+  }
+  
+  h2 {
+    @apply text-lg;
+  }
+  
+  h3 {
+    @apply text-base;
+  }
+  
+  .text-responsive {
+    @apply text-sm;
   }
 }
 
 /* 태블릿에서 기본 폰트 크기 조정 */
 @media (min-width: 641px) and (max-width: 1024px) {
   :root {
-    font-size: 15px;
+    font-size: 14px;
   }
 }
 
@@ -27,6 +43,19 @@ body {
   font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+}
+
+/* 모바일 포스터 크기 최적화 */
+@media (max-width: 640px) {
+  .movie-poster {
+    width: 140px !important;
+    height: 210px !important;
+  }
+  
+  .movie-row-poster {
+    width: 120px !important;
+    height: 180px !important;
+  }
 }
 
 /* 터치 디바이스 최적화 */
@@ -58,7 +87,7 @@ body {
 
 /* 반응형 그리드 시스템 */
 .responsive-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6;
+  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6;
 }
 
 /* 반응형 이미지 */

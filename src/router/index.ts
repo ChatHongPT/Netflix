@@ -19,12 +19,6 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/trending',
-      name: 'trending',
-      component: TrendingContent,
-      meta: { requiresAuth: true }
-    },
-    {
       path: '/browse',
       name: 'browse',
       component: Browse,

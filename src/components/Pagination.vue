@@ -1,9 +1,9 @@
 <script setup lang="ts">
 defineProps<{
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
-}>()
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}>();
 </script>
 
 <template>
@@ -15,7 +15,7 @@ defineProps<{
       class="px-4 py-2 rounded transition-colors duration-200"
       :class="{
         'bg-blue-600 text-white': page === currentPage,
-        'bg-gray-700 hover:bg-gray-600 text-gray-300': page !== currentPage
+        'bg-gray-700 hover:bg-gray-600 text-gray-300': page !== currentPage,
       }"
     >
       {{ page }}

@@ -1,50 +1,73 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
-import { useAuth } from '../composables/useAuth'
+import { ref, onMounted, watch } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useAuth } from '../composables/useAuth';
 
-const router = useRouter()
-const toast = useToast()
-const { isAuthenticated, checkAuth, logout } = useAuth()
-const isScrolled = ref(false)
+const router = useRouter();
+const toast = useToast();
+const { isAuthenticated, checkAuth, logout } = useAuth();
+const isScrolled = ref(false);
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 0
-}
+  isScrolled.value = window.scrollY > 0;
+};
 
 onMounted(() => {
-  checkAuth()
-  window.addEventListener('scroll', handleScroll)
-})
+  checkAuth();
+  window.addEventListener('scroll', handleScroll);
+});
 
-watch(() => router.currentRoute.value, () => {
-  checkAuth()
-}, { immediate: true })
+watch(
+  () => router.currentRoute.value,
+  () => {
+    checkAuth();
+  },
+  { immediate: true }
+);
 
 const handleLogout = () => {
-  logout()
-  toast.success('로그아웃되었습니다')
-  router.push('/signin')
-}
+  logout();
+  toast.success('로그아웃되었습니다');
+  router.push('/signin');
+};
 </script>
 
 <template>
-  <nav 
+  <nav
     class="fixed top-0 w-full z-50 transition-all duration-300 px-12 py-4"
-    :class="{ 'bg-black': isScrolled, 'bg-gradient-to-b from-black/70 to-transparent': !isScrolled }"
+    :class="{
+      'bg-black': isScrolled,
+      'bg-gradient-to-b from-black/70 to-transparent': !isScrolled,
+    }"
   >
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-8">
-        <RouterLink to="/" class="text-2xl font-bold text-red-600 no-underline hover:text-red-600">NETFLIX</RouterLink>
+        <RouterLink
+          to="/"
+          class="text-2xl font-bold text-red-600 no-underline hover:text-red-600"
+          >NETFLIX</RouterLink
+        >
         <div v-if="isAuthenticated" class="flex space-x-6">
-          <RouterLink to="/trending" class="text-sm hover:text-gray-300 transition">대세 콘텐츠</RouterLink>
-          <RouterLink to="/browse" class="text-sm hover:text-gray-300 transition">찾아보기</RouterLink>
-          <RouterLink to="/my-list" class="text-sm hover:text-gray-300 transition">내가 찜한 콘텐츠</RouterLink>
+          <RouterLink
+            to="/trending"
+            class="text-sm hover:text-gray-300 transition"
+            >대세 콘텐츠</RouterLink
+          >
+          <RouterLink
+            to="/browse"
+            class="text-sm hover:text-gray-300 transition"
+            >찾아보기</RouterLink
+          >
+          <RouterLink
+            to="/my-list"
+            class="text-sm hover:text-gray-300 transition"
+            >내가 찜한 콘텐츠</RouterLink
+          >
         </div>
       </div>
       <div v-if="isAuthenticated" class="flex items-center space-x-4">
-        <button 
+        <button
           @click="handleLogout"
           class="text-sm hover:text-gray-300 transition"
         >

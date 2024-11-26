@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import type { Movie } from '../services/movieApi';
 import LoadingSpinner from './LoadingSpinner.vue';
+import { useFavorites } from '../composables/useFavorites';
 
 defineProps<{
   title: string;
@@ -10,6 +11,7 @@ defineProps<{
 }>();
 
 const hoveredMovie = ref<number | null>(null);
+const { toggleFavorite, isFavorite } = useFavorites();
 </script>
 
 <template>
@@ -23,27 +25,54 @@ const hoveredMovie = ref<number | null>(null);
         <div
           v-for="movie in movies"
           :key="movie.id"
-          class="flex-none w-[200px] transition-all duration-300 relative"
-          :class="{ 'movie-card-hover': hoveredMovie === movie.id }"
+          class="flex-none w-[200px] group relative"
           @mouseenter="hoveredMovie = movie.id"
           @mouseleave="hoveredMovie = null"
         >
-          <img
-            :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-            :alt="movie.title"
-            class="w-full h-[300px] object-cover rounded"
-            loading="lazy"
-          />
-          <div
-            v-if="hoveredMovie === movie.id"
-            class="absolute inset-0 bg-black bg-opacity-75 rounded p-4 flex flex-col justify-end"
-          >
-            <h3 class="font-bold text-sm">{{ movie.title }}</h3>
-            <div class="flex items-center space-x-2 mt-2 text-xs">
-              <span class="text-green-500"
-                >{{ Math.round(movie.vote_average * 10) }}% 매칭</span
-              >
-              <span>{{ new Date(movie.release_date).getFullYear() }}</span>
+          <div class="relative overflow-hidden rounded transform-gpu transition-transform duration-300 group-hover:scale-110 group-hover:z-10">
+            <img
+              :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+              :alt="movie.title"
+              class="w-full h-[300px] object-cover rounded transition-transform duration-300"
+              loading="lazy"
+            />
+            <div
+              v-if="hoveredMovie === movie.id"
+              class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end"
+            >
+              <div class="absolute top-4 right-4">
+                <button
+                  @click.stop="toggleFavorite(movie)"
+                  class="p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors duration-200"
+                >
+                  <svg
+                    class="w-6 h-6 transition-transform duration-200 hover:scale-110"
+                    :class="{ 'text-red-500 fill-current': isFavorite(movie.id), 'text-white': !isFavorite(movie.id) }"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <h3 class="font-bold text-sm mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                {{ movie.title }}
+              </h3>
+              <div class="flex items-center space-x-2 text-xs transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                <span class="text-green-500 font-semibold">
+                  {{ Math.round(movie.vote_average * 10) }}% 매칭
+                </span>
+                <span class="text-gray-300">
+                  {{ new Date(movie.release_date).getFullYear() }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -59,5 +88,13 @@ const hoveredMovie = ref<number | null>(null);
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+.group {
+  perspective: 1000px;
+}
+
+.group:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 </style>

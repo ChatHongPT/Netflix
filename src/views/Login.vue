@@ -11,7 +11,10 @@
           <label class="block mb-1">비밀번호</label>
           <input type="password" class="w-full p-2 rounded bg-gray-700" />
         </div>
-        <button type="submit" class="w-full bg-blue-600 p-2 rounded hover:bg-blue-700">
+        <button
+          type="submit"
+          class="w-full bg-blue-600 p-2 rounded hover:bg-blue-700"
+        >
           로그인
         </button>
       </form>

@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import { useForm } from 'vee-validate'
-import * as yup from 'yup'
 import LoginForm from '../components/auth/LoginForm.vue'
 import SignupForm from '../components/auth/SignupForm.vue'
 

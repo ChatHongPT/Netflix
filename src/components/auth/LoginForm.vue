@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useForm, Field } from 'vee-validate'
 import * as yup from 'yup'
 
@@ -15,6 +14,7 @@ const { handleSubmit, errors } = useForm({
   validationSchema: schema,
   initialValues: {
     email: localStorage.getItem('rememberedEmail') || '',
+    password: '',
     rememberMe: false
   }
 })

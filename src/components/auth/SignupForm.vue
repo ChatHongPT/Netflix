@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useForm, Field } from 'vee-validate'
 import * as yup from 'yup'
 
@@ -16,7 +15,13 @@ const schema = yup.object({
 })
 
 const { handleSubmit, errors } = useForm({
-  validationSchema: schema
+  validationSchema: schema,
+  initialValues: {
+    email: '',
+    password: '',
+    confirmPassword: '',
+    terms: false
+  }
 })
 
 const onSubmit = handleSubmit((values) => {

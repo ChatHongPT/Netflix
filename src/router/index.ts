@@ -40,7 +40,7 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated')
   
   if (to.meta.requiresAuth && !isAuthenticated) {

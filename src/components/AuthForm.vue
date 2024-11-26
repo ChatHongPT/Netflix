@@ -79,7 +79,7 @@ const onSubmit = handleSubmit(async (values) => {
         users.push(userData)
         localStorage.setItem('users', JSON.stringify(users))
         toast.success('회원가입 성공!')
-        emit('success', userData) // Emit success event with user data
+        emit('success', userData)
       }
     } else {
       toast.error(props.mode === 'signin' ? '로그인 실패: 잘못된 인증 정보입니다' : '회원가입 실패: API 키가 올바르지 않습니다')

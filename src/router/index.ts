@@ -3,9 +3,10 @@ import Home from '../views/Home.vue';
 import SignIn from '../views/SignIn.vue';
 import Browse from '../views/Browse.vue';
 import MyList from '../views/MyList.vue';
+import Trending from '../views/Trending.vue';
 
 const router = createRouter({
-  history: createWebHistory('/Netflix'), // base를 명시
+  history: createWebHistory('/Netflix'),
   routes: [
     {
       path: '/signin',
@@ -16,6 +17,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Home,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/trending',
+      name: 'trending',
+      component: Trending,
       meta: { requiresAuth: true },
     },
     {

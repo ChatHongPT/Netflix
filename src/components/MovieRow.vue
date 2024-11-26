@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Movie } from '../services/movieApi'
+import { ref } from 'vue';
+import type { Movie } from '../services/movieApi';
+import LoadingSpinner from './LoadingSpinner.vue';
 
 defineProps<{
-  title: string
-  movies: Movie[]
-}>()
+  title: string;
+  movies: Movie[];
+  loading?: boolean;
+}>();
 
-const hoveredMovie = ref<number | null>(null)
+const hoveredMovie = ref<number | null>(null);
 </script>
 
 <template>
   <div class="mb-8 pl-12">
     <h2 class="text-xl font-bold mb-4">{{ title }}</h2>
-    <div class="relative">
-      <div class="flex space-x-2 overflow-x-auto scrollbar-hide">
+    <div class="relative min-h-[300px]">
+      <div v-if="loading" class="absolute inset-0 flex items-center justify-center">
+        <LoadingSpinner size="md" />
+      </div>
+      <div v-else class="flex space-x-2 overflow-x-auto scrollbar-hide">
         <div
           v-for="movie in movies"
           :key="movie.id"
@@ -27,6 +32,7 @@ const hoveredMovie = ref<number | null>(null)
             :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
             :alt="movie.title"
             class="w-full h-[300px] object-cover rounded"
+            loading="lazy"
           />
           <div
             v-if="hoveredMovie === movie.id"
@@ -34,7 +40,9 @@ const hoveredMovie = ref<number | null>(null)
           >
             <h3 class="font-bold text-sm">{{ movie.title }}</h3>
             <div class="flex items-center space-x-2 mt-2 text-xs">
-              <span class="text-green-500">{{ Math.round(movie.vote_average * 10) }}% 매칭</span>
+              <span class="text-green-500"
+                >{{ Math.round(movie.vote_average * 10) }}% 매칭</span
+              >
               <span>{{ new Date(movie.release_date).getFullYear() }}</span>
             </div>
           </div>

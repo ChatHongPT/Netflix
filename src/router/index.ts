@@ -10,7 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: '/signin',
-      redirect: (to) => {
+      redirect: () => {
         const isAuthenticated = localStorage.getItem('user')
         return isAuthenticated ? { name: 'home' } : { name: 'signin' }
       }

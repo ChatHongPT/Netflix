@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { getPopularMovies, getTopRatedMovies, getNowPlayingMovies, type Movie } from '../services/movieApi'
-import ViewModeToggle from '../components/ViewModeToggle.vue'
 import MovieRow from '../components/MovieRow.vue'
 
 const featuredMovies = ref<Movie[]>([])

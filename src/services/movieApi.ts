@@ -4,7 +4,7 @@ export interface Movie {
   id: number;
   title: string;
   poster_path: string;
-  backdrop_path?: string; // 선택적 속성으로 추가
+  backdrop_path: string;
   overview: string;
   vote_average: number;
   release_date: string;

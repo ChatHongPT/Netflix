@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import Auth from '../views/Auth.vue'
+import SignIn from '../views/SignIn.vue'
 import TrendingContent from '../views/TrendingContent.vue'
 import Browse from '../views/Browse.vue'
 import MyList from '../views/MyList.vue'
@@ -16,8 +16,8 @@ const router = createRouter({
     },
     {
       path: '/signin',
-      name: 'auth',
-      component: Auth
+      name: 'signin',
+      component: SignIn
     },
     {
       path: '/trending',
@@ -40,8 +40,8 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, _, next) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated')
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('user')
   
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/signin')

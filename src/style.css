@@ -5,11 +5,3 @@
 :root {
   color-scheme: dark;
 }
-
-input {
-  @apply p-2;
-}
-
-input[type="checkbox"] {
-  @apply w-4 h-4;
-}

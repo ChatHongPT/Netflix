@@ -15,6 +15,7 @@ const popularMovies = ref<Movie[]>([]);
 const topRatedMovies = ref<Movie[]>([]);
 const nowPlayingMovies = ref<Movie[]>([]);
 const loading = ref(true);
+
 const rowsLoading = ref({
   popular: true,
   topRated: true,
@@ -87,11 +88,11 @@ const currentFeaturedMovie = computed(
 </script>
 
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen bg-black">
     <!-- Loading State for Hero Section -->
     <div
       v-if="loading && !currentFeaturedMovie"
-      class="h-[85vh] w-full flex items-center justify-center bg-gray-900"
+      class="h-[85vh] w-full flex items-center justify-center bg-black"
     >
       <LoadingSpinner size="lg" />
     </div>
@@ -135,7 +136,7 @@ const currentFeaturedMovie = computed(
     </div>
 
     <!-- Movie Rows -->
-    <div class="relative z-10 -mt-64 pb-16">
+    <div class="relative z-10 -mt-64 pb-16 bg-black">
       <MovieRow
         title="인기 콘텐츠"
         :movies="popularMovies"

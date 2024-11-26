@@ -4,30 +4,102 @@
 
 :root {
   color-scheme: dark;
+  font-size: 16px;
+}
+
+/* 모바일 기기에서 기본 폰트 크기 조정 */
+@media (max-width: 640px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+/* 태블릿에서 기본 폰트 크기 조정 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  :root {
+    font-size: 15px;
+  }
 }
 
 body {
   background-color: #000000;
   color: #ffffff;
   font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 
-.netflix-gradient {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 1) 100%);
+/* 터치 디바이스 최적화 */
+@media (hover: none) {
+  .movie-card {
+    @apply active:scale-95 transition-transform;
+  }
+  
+  .touch-action-none {
+    touch-action: none;
+  }
 }
 
-.movie-card {
-  @apply transition-all duration-300 ease-in-out transform-gpu;
+/* 화면 방향 전환 시 최적화 */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .navbar-mobile {
+    @apply hidden;
+  }
+  
+  .content-landscape {
+    @apply mt-0;
+  }
 }
 
-.movie-card-content {
-  @apply transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100;
+/* 반응형 컨테이너 */
+.responsive-container {
+  @apply container mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-.movie-info {
-  @apply transition-all duration-300 ease-in-out transform translate-y-4 group-hover:translate-y-0;
+/* 반응형 그리드 시스템 */
+.responsive-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6;
 }
 
-* {
-  @apply transition-transform duration-300 ease-in-out;
+/* 반응형 이미지 */
+.responsive-image {
+  @apply w-full h-auto object-cover;
+  aspect-ratio: 2/3;
+}
+
+/* 반응형 폰트 크기 */
+.text-responsive {
+  @apply text-sm sm:text-base md:text-lg;
+}
+
+/* 터치 타겟 크기 최적화 */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px];
+}
+
+/* 스크롤바 스타일링 */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* 다크 모드 최적화 */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-optimized {
+    @apply bg-black text-white;
+  }
 }

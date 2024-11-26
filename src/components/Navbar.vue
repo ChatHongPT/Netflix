@@ -41,13 +41,6 @@ const handleLogout = () => {
             로그아웃
           </button>
         </template>
-        <RouterLink 
-          v-else 
-          to="/signin" 
-          class="text-white hover:text-gray-300 bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition-colors duration-200"
-        >
-          로그인
-        </RouterLink>
       </div>
     </div>
   </nav>

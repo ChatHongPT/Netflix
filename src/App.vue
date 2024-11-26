@@ -1,18 +1,11 @@
 <script setup lang="ts">
-import { RouterView, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue'
-
-const route = useRoute()
-
-const hideNavbar = computed(() => {
-  return route.path === '/signin'
-})
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
-    <Navbar v-if="!hideNavbar" />
+    <Navbar />
     <RouterView />
   </div>
 </template>

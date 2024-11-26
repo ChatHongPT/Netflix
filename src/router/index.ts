@@ -9,10 +9,6 @@ const router = createRouter({
   history: createWebHistory('/Netflix'), // base를 명시
   routes: [
     {
-      path: '/',
-      redirect: '/signin' // 처음 접속 시 /signin으로 리다이렉트
-    },
-    {
       path: '/signin',
       name: 'signin',
       component: SignIn

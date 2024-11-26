@@ -9,6 +9,13 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: '/signin',
+      redirect: (to) => {
+        const isAuthenticated = localStorage.getItem('user')
+        return isAuthenticated ? { name: 'home' } : { name: 'signin' }
+      }
+    },
+    {
       path: '/',
       name: 'home',
       component: Home,

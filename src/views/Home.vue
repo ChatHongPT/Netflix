@@ -110,12 +110,12 @@ const currentFeaturedMovie = computed(
           class="w-full h-full object-cover"
         />
       </transition>
-      <div class="absolute inset-0 netflix-gradient"></div>
-      <div class="absolute bottom-[30%] left-0 p-12 space-y-4 max-w-2xl">
-        <h1 class="text-4xl font-bold text-shadow-lg">
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+      <div class="absolute bottom-[30%] left-0 p-4 sm:p-12 space-y-2 sm:space-y-4 max-w-full sm:max-w-2xl">
+        <h1 class="text-2xl sm:text-4xl font-bold text-shadow-lg line-clamp-2">
           {{ currentFeaturedMovie.title }}
         </h1>
-        <p class="text-lg text-gray-200 line-clamp-3 text-shadow-md">
+        <p class="text-sm sm:text-lg text-gray-200 line-clamp-2 sm:line-clamp-3 text-shadow-md">
           {{ currentFeaturedMovie.overview }}
         </p>
       </div>
@@ -126,11 +126,10 @@ const currentFeaturedMovie = computed(
           :key="index"
           @click="currentFeaturedIndex = index"
           class="w-2 h-2 rounded-full transition-all duration-300"
-          :class="
-            index === currentFeaturedIndex
-              ? 'bg-white scale-125'
-              : 'bg-gray-500 hover:bg-gray-400'
-          "
+          :class="{
+            'bg-white scale-125': index === currentFeaturedIndex,
+            'bg-gray-500 hover:bg-gray-400': index !== currentFeaturedIndex
+          }"
         ></button>
       </div>
     </div>
@@ -167,6 +166,13 @@ const currentFeaturedMovie = computed(
   opacity: 0;
 }
 
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -180,5 +186,11 @@ const currentFeaturedMovie = computed(
 
 .text-shadow-md {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 640px) {
+  .text-shadow-lg {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
 }
 </style>

@@ -78,6 +78,8 @@
 
 ## 모바일 최적화
 
+반응형 구현을 활용해 모바일 사용자 경험을 개선했습니다.
+
 ![Mobile](https://github.com/user-attachments/assets/f8d2d239-188d-4439-b3d1-358b8c4315b0)
 ---
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import AuthForm from '../components/AuthForm.vue';
+import backgroundImage from '/src/assets/background.jpg';
+import startGif from '/src/assets/start.gif';
 
 const mode = ref<'signin' | 'signup'>('signin');
 const isAnimating = ref(false);
@@ -43,7 +45,7 @@ const handleSignupSuccess = (userData: { email: string; password: string }) => {
       class="fixed inset-0 bg-black flex items-center justify-center z-50"
     >
       <img
-        src="../assets/start.gif"
+        :src="startGif"
         alt="Loading"
         class="max-w-full max-h-full object-contain"
       />
@@ -57,7 +59,7 @@ const handleSignupSuccess = (userData: { email: string; password: string }) => {
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
-          src="../assets/background.jpg"
+          :src="backgroundImage"
           alt="Background"
           class="w-full h-full object-cover"
         />

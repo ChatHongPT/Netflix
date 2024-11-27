@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import AuthForm from '../components/AuthForm.vue';
 
 const mode = ref<'signin' | 'signup'>('signin');
 const isAnimating = ref(false);
+const isLoading = ref(true);
+
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 2000); // Show loading animation for 2 seconds
+});
 
 const toggleMode = () => {
   isAnimating.value = true;
@@ -29,32 +36,62 @@ const handleSignupSuccess = (userData: { email: string; password: string }) => {
 </script>
 
 <template>
-  <div
-    class="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8"
-  >
-    <div class="max-w-md w-full space-y-8 bg-gray-800 p-8 rounded-lg shadow-lg">
-      <div class="form-container overflow-hidden">
-        <div
-          class="form-slider"
-          :class="{
-            'slide-left': isAnimating && mode === 'signup',
-            'slide-right': isAnimating && mode === 'signin',
-          }"
-        >
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-white mb-8">
-            {{ mode === 'signin' ? '로그인' : '회원가입' }}
-          </h2>
+  <div class="min-h-screen bg-black">
+    <!-- Loading Screen -->
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-black flex items-center justify-center z-50"
+    >
+      <img
+        src="../assets/start.gif"
+        alt="Loading"
+        class="max-w-full max-h-full object-contain"
+      />
+    </div>
 
-          <AuthForm :mode="mode" @success="handleSignupSuccess" />
+    <!-- Auth Screen -->
+    <div
+      v-else
+      class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative"
+    >
+      <!-- Background Image -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="../assets/background.jpg"
+          alt="Background"
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-black/60"></div>
+      </div>
 
-          <div class="text-center mt-4">
-            <button
-              @click="toggleMode"
-              class="text-blue-400 hover:text-blue-500 text-sm transition-colors duration-200"
-              :disabled="isAnimating"
+      <div
+        class="max-w-md w-full space-y-8 bg-gray-900/90 p-8 rounded-lg shadow-2xl backdrop-blur-sm relative z-10"
+      >
+        <div class="form-container overflow-hidden">
+          <div
+            class="form-slider"
+            :class="{
+              'slide-left': isAnimating && mode === 'signup',
+              'slide-right': isAnimating && mode === 'signin',
+            }"
+          >
+            <h2
+              class="mt-6 text-center text-3xl font-extrabold text-white mb-8"
             >
-              {{ mode === 'signin' ? '회원가입하기' : '로그인하기' }}
-            </button>
+              {{ mode === 'signin' ? '로그인' : '회원가입' }}
+            </h2>
+
+            <AuthForm :mode="mode" @success="handleSignupSuccess" />
+
+            <div class="text-center mt-4">
+              <button
+                @click="toggleMode"
+                class="text-blue-400 hover:text-blue-500 text-sm transition-colors duration-200"
+                :disabled="isAnimating"
+              >
+                {{ mode === 'signin' ? '회원가입하기' : '로그인하기' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>

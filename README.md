@@ -27,11 +27,11 @@
 
 <img src="https://img.shields.io/static/v1?label=Vue.js&message=3.5.13&color=4FC08D&logo=kotlin&logoColor=4FC08D" alt="Vue.js">
 <img src="https://img.shields.io/static/v1?label=Tailwind CSS&message=3.4.1&color=06B6D4&logo=Gradle&logoColor=06B6D4" alt="Tailwind">
-- Frontend : Vue.js
-- Styling : Tailwind CSS
-- API : TMDB API
-- Deploy : Github Pages
-- CI/CD : Github Actions
+- Frontend : Vue.js <br></br>
+- Styling : Tailwind CSS<br></br>
+- API : TMDB API<br></br>
+- Deploy : Github Pages<br></br>
+- CI/CD : Github Actions<br></br>
 
 ---
 

@@ -10,30 +10,23 @@
 /* 모바일 기기에서 기본 폰트 크기 조정 */
 @media (max-width: 640px) {
   :root {
-    font-size: 12px;
+    font-size: 14px;
   }
   
   h1 {
-    @apply text-xl;
-  }
-  
-  h2 {
     @apply text-lg;
   }
   
-  h3 {
+  h2 {
     @apply text-base;
   }
   
-  .text-responsive {
+  h3 {
     @apply text-sm;
   }
-}
-
-/* 태블릿에서 기본 폰트 크기 조정 */
-@media (min-width: 641px) and (max-width: 1024px) {
-  :root {
-    font-size: 14px;
+  
+  .text-responsive {
+    @apply text-xs;
   }
 }
 
@@ -48,13 +41,13 @@ body {
 /* 모바일 포스터 크기 최적화 */
 @media (max-width: 640px) {
   .movie-poster {
-    width: 140px !important;
-    height: 210px !important;
+    width: 100px !important;
+    height: 150px !important;
   }
   
   .movie-row-poster {
-    width: 120px !important;
-    height: 180px !important;
+    width: 100px !important;
+    height: 150px !important;
   }
 }
 
@@ -82,12 +75,12 @@ body {
 
 /* 반응형 컨테이너 */
 .responsive-container {
-  @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  @apply container mx-auto px-2 sm:px-6 lg:px-8;
 }
 
 /* 반응형 그리드 시스템 */
 .responsive-grid {
-  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6;
+  @apply grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-4;
 }
 
 /* 반응형 이미지 */
@@ -98,7 +91,7 @@ body {
 
 /* 반응형 폰트 크기 */
 .text-responsive {
-  @apply text-sm sm:text-base md:text-lg;
+  @apply text-xs sm:text-sm md:text-base;
 }
 
 /* 터치 타겟 크기 최적화 */

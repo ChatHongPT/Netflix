@@ -1,19 +1,18 @@
 import { ref, watch } from 'vue';
 
-export function useDebounce<T>(value: T, delay: number) {
-  const debouncedValue = ref(value);
+export function useDebounce<T>(initialValue: T, delay: number) {
+  const debouncedValue = ref<T>(initialValue);
   let timeout: NodeJS.Timeout;
 
-  watch(
-    () => value,
-    (newValue) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        debouncedValue.value = newValue;
-      }, delay);
-    },
-    { deep: true }
-  );
+  const update = (value: T) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      debouncedValue.value = value;
+    }, delay);
+  };
 
-  return debouncedValue;
+  return {
+    debouncedValue,
+    update
+  };
 }

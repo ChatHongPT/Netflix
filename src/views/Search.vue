@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
-import { getGenres, searchMovies, getMoviesByGenre, type Movie, type Genre } from '../services/movieApi';
+import { getGenres, searchMovies, getMoviesByFilters, type Movie, type Genre } from '../services/movieApi';
 import MovieTable from '../components/MovieTable.vue';
 import MovieInfiniteGrid from '../components/MovieInfiniteGrid.vue';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
@@ -19,57 +19,37 @@ const totalPages = ref(1);
 const searchQuery = ref('');
 const selectedGenre = ref<number>(0);
 const selectedRating = ref<number>(0);
-const sortBy = ref<'popularity' | 'rating' | 'date'>('popularity');
+const sortBy = ref<string>('popularity.desc');
 const yearFilter = ref<string>('');
 
-const debouncedSearch = useDebounce(searchQuery, 500);
+const { debouncedValue: debouncedSearch, update: updateDebouncedSearch } = useDebounce('', 500);
 
-// Computed Properties
-const filteredMovies = computed(() => {
-  let result = [...movies.value];
-
-  // Filter by genre
-  if (selectedGenre.value > 0) {
-    result = result.filter(movie => 
-      movie.genre_ids.includes(selectedGenre.value)
-    );
-  }
-
-  // Filter by rating
-  if (selectedRating.value > 0) {
-    result = result.filter(movie => movie.vote_average >= selectedRating.value);
-  }
-
-  // Filter by year
-  if (yearFilter.value) {
-    result = result.filter(movie => 
-      movie.release_date.startsWith(yearFilter.value)
-    );
-  }
-
-  // Sort movies
-  switch (sortBy.value) {
-    case 'rating':
-      result.sort((a, b) => b.vote_average - a.vote_average);
-      break;
-    case 'date':
-      result.sort((a, b) => 
-        new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
-      );
-      break;
-    default:
-      // Already sorted by popularity from API
-      break;
-  }
-
-  return result;
-});
+const sortOptions = [
+  { value: 'popularity.desc', label: '인기순' },
+  { value: 'vote_average.desc', label: '평점 높은순' },
+  { value: 'vote_average.asc', label: '평점 낮은순' },
+  { value: 'primary_release_date.desc', label: '최신순' },
+  { value: 'primary_release_date.asc', label: '오래된순' },
+  { value: 'revenue.desc', label: '수익순' },
+];
 
 // Methods
 const fetchMovies = async (page: number) => {
   try {
     loading.value = true;
-    const response = await searchMovies(debouncedSearch.value || 'a', page);
+    let response;
+
+    if (debouncedSearch.value) {
+      response = await searchMovies(debouncedSearch.value, page);
+    } else {
+      response = await getMoviesByFilters({
+        genreId: selectedGenre.value || undefined,
+        minRating: selectedRating.value || undefined,
+        year: yearFilter.value || undefined,
+        sortBy: sortBy.value,
+        page,
+      });
+    }
     
     if (viewMode.value === 'infinite' && page > 1) {
       movies.value = [...movies.value, ...response.data.results];
@@ -77,7 +57,7 @@ const fetchMovies = async (page: number) => {
       movies.value = response.data.results;
     }
     
-    totalPages.value = response.data.total_pages;
+    totalPages.value = Math.min(response.data.total_pages, 500);
   } catch (error) {
     console.error('Failed to fetch movies:', error);
   } finally {
@@ -94,18 +74,22 @@ const fetchGenres = async () => {
   }
 };
 
-const handlePageChange = async (page: number) => {
+const handlePageChange = (page: number) => {
+  if (page === currentPage.value) return;
   currentPage.value = page;
-  await fetchMovies(page);
+  fetchMovies(page);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const resetFilters = () => {
   selectedGenre.value = 0;
   selectedRating.value = 0;
-  sortBy.value = 'popularity';
+  sortBy.value = 'popularity.desc';
   yearFilter.value = '';
   searchQuery.value = '';
+  updateDebouncedSearch('');
+  currentPage.value = 1;
+  fetchMovies(1);
 };
 
 const loadMore = async () => {
@@ -116,10 +100,14 @@ const loadMore = async () => {
 };
 
 // Watchers
-watch(debouncedSearch, () => {
+watch(searchQuery, (newValue) => {
+  updateDebouncedSearch(newValue);
+});
+
+watch([debouncedSearch, selectedGenre, selectedRating, sortBy, yearFilter], () => {
   currentPage.value = 1;
   fetchMovies(1);
-});
+}, { deep: true });
 
 // Lifecycle
 onMounted(() => {
@@ -173,7 +161,61 @@ onMounted(() => {
       </div>
 
       <!-- Filters -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Rating Filter -->
+        <div class="space-y-2">
+          <label class="text-sm text-gray-400">최소 평점</label>
+          <select
+            v-model="selectedRating"
+            class="w-full bg-gray-800 rounded-lg p-2"
+          >
+            <option value="0">전체</option>
+            <option value="5">5점 이상</option>
+            <option value="6">6점 이상</option>
+            <option value="7">7점 이상</option>
+            <option value="8">8점 이상</option>
+            <option value="9">9점 이상</option>
+          </select>
+        </div>
+
+        <!-- Year Filter -->
+        <div class="space-y-2">
+          <label class="text-sm text-gray-400">개봉년도</label>
+          <select
+            v-model="yearFilter"
+            class="w-full bg-gray-800 rounded-lg p-2"
+          >
+            <option value="">전체</option>
+            <option
+              v-for="year in Array.from(
+                { length: 30 },
+                (_, i) => new Date().getFullYear() - i
+              )"
+              :key="year"
+              :value="year"
+            >
+              {{ year }}년
+            </option>
+          </select>
+        </div>
+
+        <!-- Sort By -->
+        <div class="space-y-2">
+          <label class="text-sm text-gray-400">정렬</label>
+          <select
+            v-model="sortBy"
+            class="w-full bg-gray-800 rounded-lg p-2"
+          >
+            <option
+              v-for="option in sortOptions"
+              :key="option.value"
+              :value="option.value"
+            >
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
         <!-- Genre Filter -->
         <div class="space-y-2">
           <label class="text-sm text-gray-400">장르</label>
@@ -191,46 +233,6 @@ onMounted(() => {
             </option>
           </select>
         </div>
-
-        <!-- Rating Filter -->
-        <div class="space-y-2">
-          <label class="text-sm text-gray-400">최소 평점</label>
-          <select
-            v-model="selectedRating"
-            class="w-full bg-gray-800 rounded-lg p-2"
-          >
-            <option value="0">전체</option>
-            <option value="7">7점 이상</option>
-            <option value="8">8점 이상</option>
-            <option value="9">9점 이상</option>
-          </select>
-        </div>
-
-        <!-- Year Filter -->
-        <div class="space-y-2">
-          <label class="text-sm text-gray-400">개봉년도</label>
-          <input
-            v-model="yearFilter"
-            type="number"
-            min="1900"
-            :max="new Date().getFullYear()"
-            placeholder="연도 입력"
-            class="w-full px-4 py-2 bg-gray-800 rounded-lg"
-          />
-        </div>
-
-        <!-- Sort By -->
-        <div class="space-y-2">
-          <label class="text-sm text-gray-400">정렬</label>
-          <select
-            v-model="sortBy"
-            class="w-full bg-gray-800 rounded-lg p-2"
-          >
-            <option value="popularity">인기순</option>
-            <option value="rating">평점순</option>
-            <option value="date">최신순</option>
-          </select>
-        </div>
       </div>
     </div>
 
@@ -242,7 +244,7 @@ onMounted(() => {
 
     <!-- Content -->
     <template v-else>
-      <div v-if="filteredMovies.length === 0" 
+      <div v-if="movies.length === 0" 
            class="text-center py-12 text-gray-400">
         <i class="fas fa-search text-4xl mb-4"></i>
         <p class="text-xl">검색 결과가 없습니다</p>
@@ -251,7 +253,7 @@ onMounted(() => {
       <template v-else>
         <!-- Table View -->
         <template v-if="viewMode === 'table'">
-          <MovieTable :movies="filteredMovies" />
+          <MovieTable :movies="movies" />
           <Pagination
             :current-page="currentPage"
             :total-pages="totalPages"
@@ -262,7 +264,7 @@ onMounted(() => {
         <!-- Infinite Scroll View -->
         <template v-else>
           <MovieInfiniteGrid
-            :movies="filteredMovies"
+            :movies="movies"
             :loading="loading"
             @load-more="loadMore"
           />

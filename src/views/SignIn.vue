@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import AuthForm from '../components/AuthForm.vue';
-import backgroundImage from './assets/background.jpg';
-import startGif from './assets/start.gif';
+import backgroundImage from '@/assets/background.jpg';
+import startGif from '@/assets/start.gif';
 
 const mode = ref<'signin' | 'signup'>('signin');
 const isAnimating = ref(false);

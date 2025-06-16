@@ -9,9 +9,6 @@
 📆 2024.10.27 ~ 2024.11.27
 👨🏻‍💻 Front-End Demo Site 개발 프로젝트
 ```
-<div align="center">
-  <a href="https://github.com/ChatHongPT/Netflix/tree/for_android"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fkfpd.org&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%2370FF00&title=Netflix+Main+Repository&edge_flat=false"/></a>
-</div>
 
 ---
 ### 👥 Developer
@@ -26,7 +23,6 @@
 ### 🛠️ Tech Stack
 
 <img src="https://img.shields.io/static/v1?label=Vue.js&message=3.5.13&color=4FC08D&logo=kotlin&logoColor=4FC08D" alt="Vue.js">
-<img src="https://img.shields.io/static/v1?label=Tailwind CSS&message=3.4.1&color=06B6D4&logo=Gradle&logoColor=06B6D4" alt="Tailwind">
 - Frontend : Vue.js <br></br>
 - Styling : Tailwind CSS<br></br>
 - API : TMDB API<br></br>
